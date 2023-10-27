@@ -27,12 +27,13 @@ func NewServer() *Server {
 		Database: NewDatabase(),
 	}
 	server.routes()
-	
+
 	return server
 }
 
 func (server *Server) routes() {
 	v1 := server.PathPrefix("/api/v1").Subrouter()
+	v1.Headers("Access-Control-Allow-Origin", "*")
 	v1.HandleFunc("/items", server.listItems()).Methods("GET")
 	v1.HandleFunc("/items", server.addItem()).Methods("POST")
 	v1.HandleFunc("/items/{id}", server.removeItem()).Methods("DELETE")
