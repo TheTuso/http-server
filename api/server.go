@@ -33,7 +33,17 @@ func NewServer() *Server {
 
 func (server *Server) routes() {
 	v1 := server.PathPrefix("/api/v1").Subrouter()
-	v1.Headers("Access-Control-Allow-Origin", "*")
+	v1.Use(func(next http.Handler) http.Handler {
+		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+			// Set CORS headers
+			w.Header().Set("Access-Control-Allow-Origin", "*")
+			w.Header().Set("Access-Control-Allow-Methods", "GET, POST, OPTIONS")
+			w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
+
+			// Continue with the request
+			next.ServeHTTP(w, r)
+		})
+	})
 	v1.HandleFunc("/items", server.listItems()).Methods("GET")
 	v1.HandleFunc("/items", server.addItem()).Methods("POST")
 	v1.HandleFunc("/items/{id}", server.removeItem()).Methods("DELETE")
