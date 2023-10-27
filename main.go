@@ -14,5 +14,5 @@ func main() {
 		handlers.LoggingHandler(os.Stdout, handlers.CORS(
 			handlers.AllowedMethods([]string{"POST", "GET", "DELETE", "PUT", "OPTIONS"}),
 			handlers.AllowedOrigins([]string{"*"}),
-			handlers.AllowedHeaders([]string{"X-Requested-With"}))(api.NewServer()))))
+			handlers.AllowedHeaders([]string{"*"}))(api.NewServer()))))
 }
