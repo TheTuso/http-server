@@ -2,17 +2,16 @@ package main
 
 import (
 	_ "github.com/go-sql-driver/mysql"
-	"github.com/gorilla/handlers"
+	"github.com/rs/cors"
 	"http-server/api"
 	"log"
 	"net/http"
-	"os"
 )
 
 func main() {
-	log.Fatal(http.ListenAndServe(":8080",
-		handlers.LoggingHandler(os.Stdout, handlers.CORS(
-			handlers.AllowedMethods([]string{"POST", "GET", "DELETE", "PUT", "OPTIONS"}),
-			handlers.AllowedOrigins([]string{"*"}),
-			handlers.AllowedHeaders([]string{"*"}))(api.NewServer()))))
+	log.Fatal(http.ListenAndServe(":8080", cors.New(cors.Options{
+		AllowedOrigins: []string{"*"},
+		AllowedMethods: []string{"POST", "GET", "DELETE", "PUT", "OPTIONS"},
+		AllowedHeaders: []string{"*"},
+	}).Handler(api.NewServer())))
 }
